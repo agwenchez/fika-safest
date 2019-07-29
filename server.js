@@ -21,7 +21,7 @@ app.post('/insert',(req,res, next)=> {
   .then(rider=>res.json(rider))
   .catch(err=> res.status(500).json({ succeess: false}));
 })
-app.post('/', (req, res) => {
+app.post('*', (req, res) => {
   let {sessionId, serviceCode, phoneNumber, text} = req.body
   var length = text.split('*').length;
   var txt = text.split('*');
