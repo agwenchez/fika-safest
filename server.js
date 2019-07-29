@@ -1,4 +1,3 @@
-
 const app = require('express')()
 const bodyParser = require('body-parser')
 const logger = require('morgan')
@@ -6,7 +5,6 @@ const port = process.env.PORT || 3030
 app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
-const mongoose = require('mongoose');
 // import rider model
 // const Rider = require("./models/Riders");
 // app.get('*', (req, res) => {
@@ -110,17 +108,6 @@ app.post('*', (req, res) => {
     res.status(400).send('Bad request!')
   }
 })
-
-mongoose.connect( 'mongodb+srv://agwera:agwenchez@fika-safe-dlpvb.mongodb.net/fika-safest',
-{
-    // useMongoClient: true,
-    useNewUrlParser:true,
-    useCreateIndex: true
-}
-).then(()=>{
-  app.listen(port, () => {
-    console.log(`Server running on port ${port}`)
-  })
-}).catch(err=>{
-  console.log(`unable to connect to databse:${err}`);
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`)
 })
