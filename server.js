@@ -51,8 +51,8 @@ app.post('*', (req, res) => {
         sms_message = `Rider Obwollo (KMEE744N) is registered with Makoma Sacco.`;
     } else {sms_message = `We are not able to verify the rider information provided.`}
         const credentials = {
-          apiKey: '546c73eecdc1ab4ba9815fb43bdcd5129b4ce1b3a94ac9cdead025bfebef68a2',
-          username: 'nyatindopatrick',
+          apiKey: 'e8bf2025937c1c956904d1de585c9851a1790c8a084c158fbb6e1df42ece636f',
+          username: 'Agwenchez',
       }
       
       // Initialize the SDK
