@@ -9,19 +9,14 @@ const RiderSchema = new Schema({
         type: String,
         required:true
     },
-    phone_number:{
-        type: Number,
-        required:true
-    },
     plate_number:{
         type: String,
         required:true,
         unique: true
     },
-    sacco_registered:{
+    sacco:{
         type: String,
-        required:true,
-        unique: true
+        required:true
     }
 
 });
