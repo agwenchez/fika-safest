@@ -124,10 +124,11 @@ app.post('*', (req, res) => {
     res.status(400).send('Bad request!')
   }
 })
-mongoose.connect( 'mongodb+srv://nyatindopatrick:dogobigy97@riders-ecfkm.mongodb.net/test?retryWrites=true&w=majority',
+mongoose.connect( 'mongodb+srv://agwera:agwenchez@fika-safe-dlpvb.mongodb.net/fika-safest',
 {
     // useMongoClient: true,
-    useNewUrlParser:true
+    useNewUrlParser:true,
+    useCreateIndex: true
 }
 ).then(()=>{
   app.listen(port, () => {
