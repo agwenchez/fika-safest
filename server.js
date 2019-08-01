@@ -67,6 +67,8 @@ app.post('*', (req, res) => {
        .then(result=> {
          let rider = result;
          let sms_msg = `Rider ${rider.name} of number plate ${rider.plate_number} is registered with ${rider.sacco}` 
+         
+         //send sms to user if found
          if(rider) {
          const credentials = {
            username: 'Agwenchez',
