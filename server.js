@@ -11,33 +11,13 @@ const mongoose = require('mongoose');
 const Rider = require("./models/Riders");
 
 
-// app.get('/riders', (res,req)=>{
-//   Rider.find()
-//     .then(riders => res.json(riders))
-// })
-
-// app.post('/riders', (res,req)=>{
-// const {name, plate_number, sacco} = req.body;
-
-//   const newRider = new Rider({
-//     name,
-//     plate_number, 
-//     sacco
-
-//   })
-
-//   newRider.save()
-//   .then(rider => res.json(rider))
-//   .catch((err) => {
-// 		res.status(500).send({ message: 'could not save the data into the database' })
-// 	});
-// });
 
 
 app.post('*', (req, res) => {
   let {sessionId, serviceCode, phoneNumber, text, name, plate_number, sacco} = req.body
   var length = text.split('*').length;
   var txt = text.split('*');
+  let initial_selection = txt[0];
   if (text == '') {
     // This is the first request. Note how we start the response with CON
     let response = `CON Welcome to Fika Safe. Please pick an option below
@@ -55,11 +35,11 @@ app.post('*', (req, res) => {
     res.send(response)
   }
   else if(length === 2){
-     let initial_selection = txt[0];
+     
     
     if(initial_selection == '1'){
       
-       let plate_number= txt[length - 1];
+       let plate= txt[length - 1];
        let client_phone_number = phoneNumber;
       
        // search rider
