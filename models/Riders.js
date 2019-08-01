@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 
 
-new RiderSchema = new Schema({
+const RiderSchema = new Schema({
 
     name:{
         type: String,
