@@ -9,25 +9,15 @@ const port = process.env.PORT || 3030
 app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-// app.post('/insert',(req,res, next)=> {
-//   const {name, plateNumber, sacco}= req.body;
-//   const newRider= new Riders({
-//     name,
-//     plateNumber,
-//     sacco
-//   })
-//   newRider.save()
-//   .then(rider=>res.json(rider))
-//   .catch(err=> res.status(500).json({ succeess: false}));
-// })
+
 app.post('*', (req, res) => {
   let { sessionId, serviceCode, phoneNumber, text } = req.body
   var length = text.split('*').length;
   var txt = text.split('*');
   let initial_selection = txt[0];
   const credentials = {
-    apiKey: 'c5a9746f05f464e3f88a50a83fbf6309cf57d80e452bcff042057ff0080dd8fc',
-    username: 'nyatindopatrick',
+    apiKey: '9e782106e76990a48344302a95221feb60b40ffd5a3d3f27c730d1184f5f18b6',
+    username: 'Agwenchez',
   }
   // Initialize the SDK
   const AfricasTalking = require('africastalking')(credentials);
@@ -76,7 +66,7 @@ app.post('*', (req, res) => {
       Riders.findOne({ plateNumber: rider_detail }).exec().then((result) => {
           if (result) {
             let rider = result;
-            sms_message = `Rider ${rider.name} whose number plate: ${rider.plateNumber}is registered with ${rider.sacco}.`;
+            sms_message = `Rider ${rider.name} whose number plate: ${rider.plateNumber} is registered with ${rider.sacco}.`;
             sendMessage(client_phone_number, sms_message);
           } else { 
             sms_message = `We are not able to verify the rider information provided.` 
@@ -119,7 +109,7 @@ app.post('*', (req, res) => {
     res.status(400).send('Bad request!')
   }
 })
-mongoose.connect('mongodb+srv://nyatindopatrick:dogobigy97@riders-ecfkm.mongodb.net/test?retryWrites=true&w=majority',
+mongoose.connect('mongodb://localhost:27017/sms-app',
   {
     // useMongoClient: true,
     useNewUrlParser: true
