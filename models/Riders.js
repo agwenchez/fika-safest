@@ -3,9 +3,9 @@ const Schema = mongoose.Schema;
 
 
 
-const RiderSchema = new Schema({
+new RiderSchema = new Schema({
 
-    rider_name:{
+    name:{
         type: String,
         required:true
     },
@@ -22,4 +22,4 @@ const RiderSchema = new Schema({
 });
 
 
-module.exports = Rider = mongoose.model('Rider', RiderSchema);
+module.exports = Rider = mongoose.model('rider', RiderSchema);

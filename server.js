@@ -1,28 +1,41 @@
-const express = require('express');
-const router = express.Router();
-const mongoose = require('mongoose');
-const app = express();
+const app = require('express')()
 const bodyParser = require('body-parser')
 const logger = require('morgan')
-const Riders = require("./models/Riders.js")
 const port = process.env.PORT || 3030
 app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
-app.post('/insert',(req,res, next)=> {
-  const {rider_name, plate_number, sacco}= req.body;
-  // console.log(r÷÷÷ider);
-  const newRider= new Riders({
-    rider_name,
-    plate_number,
-    sacco
-  })
-  newRider.save()
-  .then(rider=>res.json(rider))
-  .catch(err=> res.status(500).json({ succeess: false}));
-})
+
+
+//import rider model
+const Rider = require("./models/Riders");
+
+
+// app.get('/riders', (res,req)=>{
+//   Rider.find()
+//     .then(riders => res.json(riders))
+// })
+
+// app.post('/riders', (res,req)=>{
+// const {name, plate_number, sacco} = req.body;
+
+//   const newRider = new Rider({
+//     name,
+//     plate_number, 
+//     sacco
+
+//   })
+
+//   newRider.save()
+//   .then(rider => res.json(rider))
+//   .catch((err) => {
+// 		res.status(500).send({ message: 'could not save the data into the database' })
+// 	});
+// });
+
+
 app.post('*', (req, res) => {
-  let {sessionId, serviceCode, phoneNumber, text} = req.body
+  let {sessionId, serviceCode, phoneNumber, text, name, plate_number, sacco} = req.body
   var length = text.split('*').length;
   var txt = text.split('*');
   if (text == '') {
@@ -42,55 +55,52 @@ app.post('*', (req, res) => {
     res.send(response)
   }
   else if(length === 2){
-    let initial_selection = txt[0];
-    // let phone_number = txt[length - 1];
-     let client_phone_number = phoneNumber;
-     let sms_message ;
-    if(initial_selection == '1'){a
-      // search rider
-      // query from databse
-      // let sms_message = `We are not able to verify the rider information provided.`;
-       let rider_detail = txt[length - 1];
-// db manenos
-Riders.findOne({plateNumber: rider_detail}).exec().then((result) => {
-  if(result){
-    let rider = result;
-      sms_message = `Rider ${rider.rider_name} whose number plate: ${rider.plateNumber}is registered with ${rider.sacco}.`;
+     let initial_selection = txt[0];
+    
+    if(initial_selection == '1'){
       
-  } else {sms_message = `We are not able to verify the rider information provided.`}
-}
-).catch(err=>
-  {
-    res.status(500).send({message:`internal server error:${err}`})
-  })
+       let plate_number= txt[length - 1];
+       let client_phone_number = phoneNumber;
       
-        const credentials = {
-          apiKey: 'eaba72a3ad42958d651cb1e48f8fae648c872fe162898ded1cb5da8608148c7f',
-          username: 'Agwenchez',
-      }
-      
-      // Initialize the SDK
-      const AfricasTalking = require('africastalking')(credentials);
-      
-      // Get the SMS service
-      const sms = AfricasTalking.SMS;
-      
-      function sendMessage() {
-          const options = {
-              // Set the numbers you want to send to in international format
-              to: [client_phone_number],
-              // Set your message
-              message: sms_message
-              // Set your shortCode or senderId
-          }
-      
-          // That’s it, hit send and we’ll take care of the rest
-          sms.send(options)
-              .then(console.log)
-              .catch(console.log);
-      }
-      
-      sendMessage();
+       // search rider
+       Rider.findOne({plate_number})
+       .then(result=> {
+         let rider = result;
+         let sms_msg = `Rider ${rider.name} of number plate ${rider.plate_number} is registered with ${rider.sacco}` 
+         if(rider) {
+         const credentials = {
+           username: 'Agwenchez',
+           apiKey: '57ab9db440418a57b3ae982f0bc7bd08b8018aebdfed406260d0779e52fe38fe'
+         };
+     
+         // initialize africastalking gateway
+         const africastalking = require('africastalking')(credentials);
+     
+         // sms object of africastalking package
+         const sms = africastalking.SMS;
+     
+         // sending parameters
+         const sending_options = {
+           to: [client_phone_number],
+           message: sms_msg
+         };
+     
+         // send sms
+         sms.send(sending_options)
+           .then(response => {
+             console.log(response);
+             res.send(response);
+           })
+           .catch(error => {
+             console.log(error);
+             res.send(error);
+           });
+         }
+       }).catch((err) => {
+        res.status(500).send({ message: `the rider does not exist ${err}` })
+        console.log(err);
+      });
+
       };
       
       // initialize Africas Talking
@@ -124,16 +134,20 @@ Riders.findOne({plateNumber: rider_detail}).exec().then((result) => {
     res.status(400).send('Bad request!')
   }
 })
-mongoose.connect( 'mongodb+srv://agwera:agwenchez@fika-safe-dlpvb.mongodb.net/fika-safest',
-{
-    // useMongoClient: true,
-    useNewUrlParser:true,
-    useCreateIndex:true
-}
-).then(()=>{
-  app.listen(port, () => {
-    console.log(`Server running on port ${port}`)
-  })
-}).catch(err=>{
-  console.log(`unable to connect to databse:${err}`);
+
+
+mongoose
+  .connect('mongodb://localhost:27017/sms-app', { 
+    useNewUrlParser: true,
+    useCreateIndex: true
+  }) 
+  .then(() => console.log('MongoDB Connected...'))
+  .catch(err => console.log(err));
+
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`)
 })
+
+
+
+
