@@ -5,7 +5,7 @@ const port = process.env.PORT || 3030
 app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
-
+const mongoose = require('mongoose');
 
 //import rider model
 const Rider = require("./models/Riders");
